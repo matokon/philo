@@ -5,10 +5,11 @@ static inline bool is_space(char c)
     return ((c >=9 && c <= 13 || c == 32));
 }
 
-static inline bool is_digit(char c)
+static inline bool is_digit(char c) 
 {
-    return (c >= 0 && c <= 9);
+    return (c >= '0' && c <= '9');
 }
+
 
 const char *input_checker(const char *str)
 {
