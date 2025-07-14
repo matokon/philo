@@ -45,3 +45,4 @@ void input_parsing(t_table *table, char **argv);
 long ft_atol(const char *str);
 const char *input_checker(const char *str);
 void error_exit(const char *error);
+void data_init(t_table *table);
