@@ -16,7 +16,7 @@ static void philo_value_init(t_table *table)
     int i;
     t_philo *philo;
 
-    i = -1
+    i = -1;
     while(++i < table->philo_nbr)
     {
         philo = table->philos + i;
@@ -29,22 +29,21 @@ static void philo_value_init(t_table *table)
 }
 void data_init(t_table *table)
 {
+    int i;
     table->stop_simulation = false;
-    table->start_simulation  = get_time();//idk
+    table->threads_ready = false;
 
-    if(pthread_mutex_init(&table->print_mutex, NULL) != 0)
-        error_exit("Mutex init error![1]");
-
+    mutex_handle(&table->print_mutex, "INIT");
     table->philos = safe_malloc(sizeof(t_philo) * table->philo_nbr);
+    mutex_handle(&table->table_mutex, "INIT");
     table->forks = safe_malloc(sizeof(t_fork) * table->philo_nbr);
+    mutex_handle(&table->write_mutex, "INIT");
 
-    i = 0;
-    while (i < table->philo_nbr)
+    i = -1;
+    while (++i < table->philo_nbr)
     {
         table->forks[i].id = i + 1;
-        if (pthread_mutex_init(&table->forks[i].mutex, NULL) != 0)
-            error_exit("Mutex init error![2]");
-        i++;
+        mutex_handle(&table->forks[i].mutex, "INIT");
     }
     philo_value_init(table);
 

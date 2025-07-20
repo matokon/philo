@@ -12,7 +12,7 @@ int main(int argc, char **argv)
     }
     else
     {
-        error_exit("Wrong input\n");
+        error_exit("Wrong input!\n");
     }
     return (0);
 }
