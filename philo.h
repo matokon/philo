@@ -61,3 +61,4 @@ long long_getter(pthread_mutex_t *mtx, long *value);
 bool simulation_finished(t_table *table);
 void wait_all_threads(t_table *table);
 void ft_usleep(long usec, t_table *table);
+void write_status(t_philo *philo, char *status, bool debug);
