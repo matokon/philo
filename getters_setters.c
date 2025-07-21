@@ -34,5 +34,5 @@ long long_getter(pthread_mutex_t *mtx, long *value)
 
 bool simulation_finished(t_table *table)
 {
-    return (bool_getter(&table->table_mutex, &table->simulation_finished));
+    return (bool_getter(&table->table_mutex, &table->stop_simulation));
 }

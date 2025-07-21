@@ -10,9 +10,9 @@ void *safe_malloc(size_t bytes)
 }
 long	get_current_time(char *code)
 {
-	struct timeval	time;
+	struct timeval	tv;
 
-	if (gettimeofday(&time, NULL) == -1)
+	if (gettimeofday(&tv, NULL) == -1)
 		error_exit("gettimeofday() error\n");
     if(ft_strcmp(code, "SECOND") == 0)
         return (tv.tv_sec + (tv.tv_usec / 1e6));
@@ -22,6 +22,7 @@ long	get_current_time(char *code)
         return ((tv.tv_sec * 1e6) + tv.tv_usec);
     else
         error_exit("Wrong input code!\n");
+    return -1;
 	
 }
 int ft_strcmp(const char *s1, const char *s2)

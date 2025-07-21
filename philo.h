@@ -6,6 +6,7 @@
 #include <sys/time.h>
 #include <limits.h>
 
+#define DEBUG_MODE 0
 typedef struct s_table   t_table;
 
 typedef struct s_fork
@@ -23,6 +24,7 @@ typedef struct s_philo
   t_fork   *left_fork;
   t_fork   *right_fork;
   pthread_t thread;
+  pthread_mutex_t philo_mutex;
   t_table  *table;
 } t_philo;
 
@@ -43,15 +45,16 @@ typedef struct s_table
   pthread_mutex_t print_mutex;
 } t_table;
 
-
+void *safe_malloc(size_t bytes);
 void input_parsing(t_table *table, char **argv);
 long ft_atol(const char *str);
 const char *input_checker(const char *str);
 void error_exit(const char *error);
 void data_init(t_table *table);
 void dinner_start(t_table *table);
-long	get_current_time(void);
+long get_current_time(char *code);
 void mutex_handle(pthread_mutex_t *mtx, const char *code);
+void thread_handle(pthread_t *thread, const char *code, void *(*start_routine)(void *), void *arg);
 int ft_strcmp(const char *s1, const char *s2);
 void *dinner_simulation(void *data);
 void bool_setter(pthread_mutex_t *mtx, bool *dest, bool value);

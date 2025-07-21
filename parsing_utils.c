@@ -28,7 +28,7 @@ const char *input_checker(const char *str)
     while(is_digit(*str++))
         ++len;
     if(len > 10)
-        error_exit("Value exceeds INT_MAX!")
+        error_exit("Value exceeds INT_MAX!");
     return nbr;
 }
 

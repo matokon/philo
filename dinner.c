@@ -49,22 +49,22 @@ void *dinner_simulation(void *data)
 
 
 void dinner_start(t_table *table)
-{
+{   
+    int i;
     if(table->philo_nbr == 0)
         return ;
     else if(table->philo_nbr == 1)
         ;//TODO
     else
     {
-        int i;
         i = -1;
         while(++i < table->philo_nbr)
-            thread_handle(&table->philos[i].thread_id, "CREATE", dinner_simulation, &table->philos[i]);
+            thread_handle(&table->philos[i].thread, "CREATE", dinner_simulation, &table->philos[i]);
     }
-    table->start_simulation  = get_current_time(MILISECOND);
+    table->start_simulation = get_current_time("MILLISECOND");
 
     bool_setter(&table->table_mutex, &table->threads_ready, true);
     i = -1;
     while(++i < table->philo_nbr)
-        thread_handle(&table->philos[i].thread_id, "JOIN", NULL, NULL);
+        thread_handle(&table->philos[i].thread, "JOIN", NULL, NULL);
 }
