@@ -24,6 +24,7 @@ static void philo_value_init(t_table *table)
         philo->full = false;
         philo->meals_eaten = 0;
         philo->table = table;
+        mutex_handle(&philo->philo_mutex, "INIT");
         forks_value_init(philo, table->forks, i);
     }
 }
@@ -42,7 +43,7 @@ void data_init(t_table *table)
     i = -1;
     while (++i < table->philo_nbr)
     {
-        table->forks[i].id = i + 1;
+        table->forks[i].id = i;
         mutex_handle(&table->forks[i].mutex, "INIT");
     }
     philo_value_init(table);

@@ -20,6 +20,7 @@ void *monitor_dinner(void *data)
 {
     int i;
     t_table *table;
+    
     table = (t_table *)data;
 
     while(!all_threads_running(&table->table_mutex, &table->threads_running_nbr, table->philo_nbr))

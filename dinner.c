@@ -63,7 +63,6 @@ void *dinner_simulation(void *data)
     return NULL;
 }
 
-
 void dinner_start(t_table *table)
 {   
     int i;
@@ -77,7 +76,7 @@ void dinner_start(t_table *table)
         while(++i < table->philo_nbr)
             thread_handle(&table->philos[i].thread, "CREATE", dinner_simulation, &table->philos[i]);
     }
-    thread_handle(&table->death_monitor, "CREATE", monitor_dinner, table);
+    thread_handle(&table->death_monitor, "CREATE", monitor_dinner, table);// looking for death
     table->start_simulation = get_current_time("MILLISECOND");
 
     bool_setter(&table->table_mutex, &table->threads_ready, true);
