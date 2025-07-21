@@ -24,12 +24,28 @@ static void eat(t_philo *philo)
     mutex_handle(&philo->right_fork->mutex, "UNLOCK");
 }
 
+void *single_philo(void *arg)
+{
+    t_philo *philo;
+
+    philo = (t_philo *)arg;
+    wait_all_threads(philo->table);
+    long_setter(&philo->philo_mutex, &philo->last_meal_time, get_current_time("MILLISECOND"));
+    increase_long(&philo->table->table_mutex, &philo->table->threads_running_nbr);
+    write_status(philo, "TAKE_FIRST_FORK", DEBUG_MODE);
+    while(!simulation_finished(philo->table))
+        usleep(200);
+    return NULL;
+}
+
 void *dinner_simulation(void *data)
 {
     t_philo *philo;
     philo = (t_philo *)data;
 
     wait_all_threads(philo->table);
+    long_setter(&philo->philo_mutex, &philo->last_meal_time, get_current_time("MILLISECOND"));
+    increase_long(&philo->table->table_mutex, &philo->table->threads_running_nbr);
 
     while(!simulation_finished(philo->table))
     {
@@ -42,7 +58,7 @@ void *dinner_simulation(void *data)
 
         ft_usleep(philo->table->time_to_sleep, philo->table);
 
-        thinking(philo);//TODO
+        thinking(philo);
     }
     return NULL;
 }
@@ -54,13 +70,14 @@ void dinner_start(t_table *table)
     if(table->philo_nbr == 0)
         return ;
     else if(table->philo_nbr == 1)
-        ;//TODO
+        thread_handle(&table->philos[0].thread, "CREATE", single_philo, &table->philos[0]);
     else
     {
         i = -1;
         while(++i < table->philo_nbr)
             thread_handle(&table->philos[i].thread, "CREATE", dinner_simulation, &table->philos[i]);
     }
+    thread_handle(&table->death_monitor, "CREATE", monitor_dinner, table);
     table->start_simulation = get_current_time("MILLISECOND");
 
     bool_setter(&table->table_mutex, &table->threads_ready, true);
