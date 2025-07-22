@@ -7,7 +7,7 @@ int main(int argc, char **argv)
         t_table table;
         input_parsing(&table, argv);
         data_init(&table);
-        dinner_start(&table);//TODO
+        dinner_start(&table);
         //clean(&table);//TODO
     }
     else

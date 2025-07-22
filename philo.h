@@ -6,7 +6,7 @@
 #include <sys/time.h>
 #include <limits.h>
 
-#define DEBUG_MODE 1
+#define DEBUG_MODE 0
 typedef struct s_table   t_table;
 
 typedef struct s_fork

@@ -20,7 +20,7 @@ static void philo_value_init(t_table *table)
     while(++i < table->philo_nbr)
     {
         philo = table->philos + i;
-        philo->philo_id = i+1;
+        philo->philo_id = i + 1;
         philo->full = false;
         philo->meals_eaten = 0;
         philo->table = table;
@@ -33,7 +33,7 @@ void data_init(t_table *table)
     int i;
     table->stop_simulation = false;
     table->threads_ready = false;
-
+    table->threads_running_nbr = 0;
     mutex_handle(&table->print_mutex, "INIT");
     table->philos = safe_malloc(sizeof(t_philo) * table->philo_nbr);
     mutex_handle(&table->table_mutex, "INIT");

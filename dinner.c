@@ -4,6 +4,21 @@ static void thinking(t_philo *philo)
 {
     write_status(philo, "THINKING", DEBUG_MODE);
 }
+
+void *single_philo(void *arg)
+{
+    t_philo *philo;
+
+    philo = (t_philo *)arg;
+    wait_all_threads(philo->table);
+    long_setter(&philo->philo_mutex, &philo->last_meal_time, get_current_time("MILLISECOND"));
+    increase_long(&philo->table->table_mutex, &philo->table->threads_running_nbr);
+    write_status(philo, "TAKE_FIRST_FORK", DEBUG_MODE);
+    while(!simulation_finished(philo->table))
+        usleep(200);
+    return NULL;
+}
+
 static void eat(t_philo *philo)
 {
     mutex_handle(&philo->left_fork->mutex, "LOCK");
@@ -22,20 +37,6 @@ static void eat(t_philo *philo)
 
     mutex_handle(&philo->left_fork->mutex, "UNLOCK");
     mutex_handle(&philo->right_fork->mutex, "UNLOCK");
-}
-
-void *single_philo(void *arg)
-{
-    t_philo *philo;
-
-    philo = (t_philo *)arg;
-    wait_all_threads(philo->table);
-    long_setter(&philo->philo_mutex, &philo->last_meal_time, get_current_time("MILLISECOND"));
-    increase_long(&philo->table->table_mutex, &philo->table->threads_running_nbr);
-    write_status(philo, "TAKE_FIRST_FORK", DEBUG_MODE);
-    while(!simulation_finished(philo->table))
-        usleep(200);
-    return NULL;
 }
 
 void *dinner_simulation(void *data)
@@ -78,7 +79,6 @@ void dinner_start(t_table *table)
     }
     thread_handle(&table->death_monitor, "CREATE", monitor_dinner, table);// looking for death
     table->start_simulation = get_current_time("MILLISECOND");
-
     bool_setter(&table->table_mutex, &table->threads_ready, true);
     i = -1;
     while(++i < table->philo_nbr)
