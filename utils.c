@@ -41,9 +41,7 @@ int ft_strcmp(const char *s1, const char *s2)
     }
     return 0;
 }
-
-
-void ft_usleep(long usec, t_table *table)//st
+void ft_usleep(long usec, t_table *table)
 {
     long start;
     long elapsed;
@@ -57,9 +55,23 @@ void ft_usleep(long usec, t_table *table)//st
         elapsed = get_current_time("MICROSECOND") - start;
         rem     = usec - elapsed;
         if (rem > 1000)
-            usleep(usec / 2);
+            usleep(rem / 2);
         else
             while (get_current_time("MICROSECOND") - start < usec)
                 ;
+    }
+}
+
+void desynchronize_philos(t_philo *philo)
+{
+    if(philo->table->philo_nbr % 2 == 0)
+    {
+        if(philo->philo_id % 2 == 0)
+            ft_usleep(3e4, philo->table);
+    }
+    else
+    {
+        if(philo->philo_id % 2)
+            thinking(philo, true);
     }
 }

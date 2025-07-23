@@ -1,9 +1,23 @@
 #include "philo.h"
 
-static void thinking(t_philo *philo)
+void thinking(t_philo *philo, bool before_dinner)
 {
-    write_status(philo, "THINKING", DEBUG_MODE);
-}
+    long t_to_eat;
+    long t_to_sleep;
+    long t_to_think;
+    if(!before_dinner)
+        write_status(philo, "THINKING", DEBUG_MODE);
+
+    if(philo->table->philo_nbr % 2 == 0)
+        return ;
+
+    t_to_eat = philo->table->time_to_eat;
+    t_to_sleep = philo->table->time_to_sleep;
+    t_to_think = t_to_eat * 2 - t_to_sleep;
+    if(t_to_think < 0)
+        t_to_think = 0;
+    ft_usleep(t_to_think * 0.5, philo->table);
+}   
 
 void *single_philo(void *arg)
 {
@@ -48,9 +62,11 @@ void *dinner_simulation(void *data)
     long_setter(&philo->philo_mutex, &philo->last_meal_time, get_current_time("MILLISECOND"));
     increase_long(&philo->table->table_mutex, &philo->table->threads_running_nbr);
 
+    desynchronize_philos(philo);
+
     while(!simulation_finished(philo->table))
     {
-        if(philo->full)//TODO safe
+        if(philo->full)
             break ;
 
         eat(philo);
@@ -59,7 +75,7 @@ void *dinner_simulation(void *data)
 
         ft_usleep(philo->table->time_to_sleep, philo->table);
 
-        thinking(philo);
+        thinking(philo, false);
     }
     return NULL;
 }
@@ -77,10 +93,13 @@ void dinner_start(t_table *table)
         while(++i < table->philo_nbr)
             thread_handle(&table->philos[i].thread, "CREATE", dinner_simulation, &table->philos[i]);
     }
-    thread_handle(&table->death_monitor, "CREATE", monitor_dinner, table);// looking for death
+    thread_handle(&table->death_monitor, "CREATE", monitor_dinner, table);
     table->start_simulation = get_current_time("MILLISECOND");
     bool_setter(&table->table_mutex, &table->threads_ready, true);
     i = -1;
     while(++i < table->philo_nbr)
         thread_handle(&table->philos[i].thread, "JOIN", NULL, NULL);
+
+    bool_setter(&table->table_mutex, &table->stop_simulation, true);
+    thread_handle(&table->death_monitor, "JOIN", NULL, NULL);
 }
