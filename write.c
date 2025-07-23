@@ -1,32 +1,47 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   write.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+        
+	+:+     */
+/*   By: mokon <mokon@student.42.fr>                +#+  +:+      
+	+#+        */
+/*                                                +#+#+#+#+#+  
+	+#+           */
+/*   Created: 2025/07/23 11:54:47 by mokon             #+#    #+#             */
+/*   Updated: 2025/07/23 11:54:47 by mokon            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-void write_status(t_philo *philo, char *status)
+static void	print_status(long elapsed, int id, char *msg)
 {
-    long elapsed;
-    elapsed = get_current_time("MILLISECOND") - philo->table->start_simulation;
-    if (philo->full)
-        return;
-    mutex_handle(&philo->table->write_mutex, "LOCK");
+	printf("%-6ld %d %s\n", elapsed, id, msg);
+}
 
-    if ((ft_strcmp("TAKE_FIRST_FORK", status) == 0 || ft_strcmp("TAKE_SECOND_FORK", status) == 0) && !simulation_finished(philo->table))
-    {
-        printf("%-6ld %d has taken a fork\n", elapsed, philo->philo_id);
-    }
-    else if (ft_strcmp("EATING", status) == 0 && !simulation_finished(philo->table))
-    {
-        printf("%-6ld %d is eating\n", elapsed, philo->philo_id);
-    }
-    else if (ft_strcmp("SLEEPING", status) == 0 && !simulation_finished(philo->table))
-    {
-        printf("%-6ld %d is sleeping\n", elapsed, philo->philo_id);
-    }
-    else if (ft_strcmp("THINKING", status) == 0 && !simulation_finished(philo->table))
-    {
-        printf("%-6ld %d is thinking\n", elapsed, philo->philo_id);
-    }
-    else if (ft_strcmp("DIED", status) == 0)
-    {
-        printf("%-6ld %d died\n", elapsed, philo->philo_id);
-    }
-    mutex_handle(&philo->table->write_mutex, "UNLOCK");
+void	write_status(t_philo *philo, char *status)
+{
+	long	elapsed;
+
+	if (philo->full)
+		return ;
+	elapsed = get_current_time("MILLISECOND")
+		- philo->table->start_simulation;
+	mutex_handle(&philo->table->write_mutex, "LOCK");
+	if (!simulation_finished(philo->table))
+	{
+		if (!ft_strcmp(status, "TAKE_FIRST_FORK")
+			|| !ft_strcmp(status, "TAKE_SECOND_FORK"))
+			print_status(elapsed, philo->philo_id, "has taken a fork");
+		else if (!ft_strcmp(status, "EATING"))
+			print_status(elapsed, philo->philo_id, "is eating");
+		else if (!ft_strcmp(status, "SLEEPING"))
+			print_status(elapsed, philo->philo_id, "is sleeping");
+		else if (!ft_strcmp(status, "THINKING"))
+			print_status(elapsed, philo->philo_id, "is thinking");
+	}
+	else if (!ft_strcmp(status, "DIED"))
+		print_status(elapsed, philo->philo_id, "died");
+	mutex_handle(&philo->table->write_mutex, "UNLOCK");
 }

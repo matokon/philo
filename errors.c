@@ -1,7 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   errors.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+        
+	+:+     */
+/*   By: mokon <mokon@student.42.fr>                +#+  +:+      
+	+#+        */
+/*                                                +#+#+#+#+#+  
+	+#+           */
+/*   Created: 2025/07/23 11:52:22 by mokon             #+#    #+#             */
+/*   Updated: 2025/07/23 11:52:22 by mokon            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-void error_exit(const char *error)
+void	error_exit(const char *error)
 {
-    printf("%s", error);
-    exit(EXIT_FAILURE);
+	printf("%s", error);
+	exit(EXIT_FAILURE);
 }

@@ -1,4 +1,3 @@
-
 NAME	= philo
 
 CC		= gcc
