@@ -32,7 +32,7 @@ void *monitor_dinner(void *data)
             if(philo_died(table->philos + i))
             {
                 bool_setter(&table->table_mutex, &table->stop_simulation, true);
-                write_status(table->philos + i, "DIED", DEBUG_MODE);
+                write_status(table->philos + i, "DIED");
             }
         }
     }

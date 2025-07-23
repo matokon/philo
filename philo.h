@@ -6,7 +6,6 @@
 #include <sys/time.h>
 #include <limits.h>
 
-#define DEBUG_MODE 0
 typedef struct s_table   t_table;
 
 typedef struct s_fork
@@ -67,10 +66,10 @@ long long_getter(pthread_mutex_t *mtx, long *value);
 bool simulation_finished(t_table *table);
 void wait_all_threads(t_table *table);
 void ft_usleep(long usec, t_table *table);
-void write_status(t_philo *philo, char *status, bool debug);
 bool all_threads_running(pthread_mutex_t *mutex, long *threads, long philo_nbr);
 void increase_long(pthread_mutex_t *mutex, long *value);
 void *monitor_dinner(void *data);
 void *single_philo(void *arg);
 void clean(t_table *table);
 void desynchronize_philos(t_philo *philo);
+void write_status(t_philo *philo, char *status);
